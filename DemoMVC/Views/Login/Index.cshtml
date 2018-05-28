@@ -1,0 +1,19 @@
+﻿@model DemoMVC.LocalDbContext.Login_User
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    using (Html.BeginForm("Index", "Login", FormMethod.Post))
+    {
+        @Html.TextBoxFor(m=>m.Username)
+        @Html.PasswordFor(m=>m.Password)
+        <input type="submit" value="Submit" />
+    }
+}
+
+

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DemoMVC.Filter;
+using DemoMVC.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,10 +11,9 @@ namespace DemoMVC.Controllers
 {
     public class HomeController : Controller
     {
-        
+        [UserAuthorization]
         public ActionResult Index()
         {
-            
             return View();
         }
 
@@ -52,6 +53,12 @@ namespace DemoMVC.Controllers
                 TempData["Name"] = username;
                 return RedirectToAction("TempView");
             }
+            return View("Index");
+        }
+
+        public ActionResult Logout()
+        {
+            AuthUtil.SignOut();
             return View("Index");
         }
     }
