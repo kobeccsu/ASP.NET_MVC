@@ -8,14 +8,15 @@ using System.Web;
 
 namespace DemoMVC.MemberShip
 {
-    public class CustomUserManage : UserManager<CustomUser, string>  
+    public class CustomUserManage : UserManager<CustomUser, string>
     {
         public CustomUserManage(IUserStore<CustomUser> store) : base(store)
         {
 
         }
 
-        
+        public CustomUserManage(CustomUserStore store) : base(store) {
 
+        }
     }
 }

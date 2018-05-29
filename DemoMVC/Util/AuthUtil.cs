@@ -21,11 +21,11 @@ namespace DemoMVC.Util
             var userStore = new CustomUserStore(dbContext);
             //var userStore = new UserStore<IdentityUser>();
 
-            var a = new CustomUserManage(userStore);
+            //var a = new CustomUserManage(userStore);
             return new CustomUserManage(userStore);
         }
 
-        public async static void SignInAsync(string username, string password, bool isPersistent)
+        public static void SignIn(string username, string password, bool isPersistent)
         {
             var manager = GetManager();
             var user = manager.Find(username, password);
@@ -33,22 +33,22 @@ namespace DemoMVC.Util
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-            var identity = await manager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var identity = manager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             authenticationManager.SignIn(new AuthenticationProperties()
                {
                    IsPersistent = isPersistent
                }, identity);
         }
 
-        public static async void Register(string username, string password)
+        public static void Register(string username, string password)
         {
             var manager = GetManager();
             var user = new CustomUser() { UserName = username };
             
-            IdentityResult result = await manager.CreateAsync(user, password);
+            IdentityResult result = manager.Create(user, password);
             if (result.Succeeded)
             {
-                SignInAsync(username, password, true);
+                SignIn(username, password, true);
             }
         }
 

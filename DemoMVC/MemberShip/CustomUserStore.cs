@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using DemoMVC.LocalDbContext;
 
 namespace DemoMVC.MemberShip
 {
@@ -19,7 +20,10 @@ namespace DemoMVC.MemberShip
 
         public Task CreateAsync(CustomUser user)
         {
-            throw new NotImplementedException();
+            return Task.Run(()=> {
+                _dbContext.Set<Login_User>().Add(new Login_User() { Username = user.UserName, Password = user.PasswordHash });
+                _dbContext.SaveChanges();
+            });
         }
 
         public Task DeleteAsync(CustomUser user)
@@ -39,7 +43,9 @@ namespace DemoMVC.MemberShip
 
         public Task<CustomUser> FindByNameAsync(string userName)
         {
-            throw new NotImplementedException();
+            var user = _dbContext.Set<Login_User>().Where(m => m.Username == userName).FirstOrDefault();
+            
+            return Task.FromResult<CustomUser>(user != null ? new CustomUser() { UserName = user.Username } : null);
         }
 
         public Task<int> GetAccessFailedCountAsync(CustomUser user)
@@ -59,7 +65,8 @@ namespace DemoMVC.MemberShip
 
         public Task<string> GetPasswordHashAsync(CustomUser user)
         {
-            throw new NotImplementedException();
+            var u = _dbContext.Set<Login_User>().Where(m => m.Username == user.UserName).FirstOrDefault();
+            return Task.FromResult<string>(u.Password);
         }
 
         public Task<bool> GetTwoFactorEnabledAsync(CustomUser user)
@@ -94,7 +101,8 @@ namespace DemoMVC.MemberShip
 
         public Task SetPasswordHashAsync(CustomUser user, string passwordHash)
         {
-            throw new NotImplementedException();
+            user.PasswordHash = passwordHash;
+            return Task.FromResult(0);
         }
 
         public Task SetTwoFactorEnabledAsync(CustomUser user, bool enabled)

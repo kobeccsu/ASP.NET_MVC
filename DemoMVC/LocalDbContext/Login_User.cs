@@ -17,7 +17,7 @@ namespace DemoMVC.LocalDbContext
         public string Username { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(130)]
         public string Password { get; set; }
     }
 }
