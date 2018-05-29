@@ -1,4 +1,5 @@
 ﻿using DemoMVC.LocalDbContext;
+using DemoMVC.MemberShip;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
@@ -10,34 +11,41 @@ using System.Web;
 
 namespace DemoMVC.Util
 {
+    // follow this document that maybe realize it
+    // https://www.cnblogs.com/calvinK/p/4648138.html
     public class AuthUtil
     {
-        public static void SignInAsync(string username, string password, bool isPersistent)
+        private static CustomUserManage GetManager()
         {
             var dbContext = new LocalDbContext.LocalDb();
-            var userStore = new UserStore<IdentityUser>(dbContext);
-            var manager = new UserManager<IdentityUser>(userStore);
+            var userStore = new CustomUserStore(dbContext);
+            //var userStore = new UserStore<IdentityUser>();
+
+            var a = new CustomUserManage(userStore);
+            return new CustomUserManage(userStore);
+        }
+
+        public async static void SignInAsync(string username, string password, bool isPersistent)
+        {
+            var manager = GetManager();
             var user = manager.Find(username, password);
 
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-            var identity = manager.CreateIdentity<IdentityUser, string>(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var identity = await manager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             authenticationManager.SignIn(new AuthenticationProperties()
                {
                    IsPersistent = isPersistent
                }, identity);
         }
 
-        public static void Register(string username, string password)
+        public static async void Register(string username, string password)
         {
-            var dbContext = new LocalDbContext.LocalDb();
-            var userStore = new UserStore<IdentityUser>(dbContext);
-            var manager = new UserManager<IdentityUser>(userStore);
-
-            var user = new IdentityUser() { UserName = username };
+            var manager = GetManager();
+            var user = new CustomUser() { UserName = username };
             
-            IdentityResult result = manager.Create<IdentityUser, string>(user, password);
+            IdentityResult result = await manager.CreateAsync(user, password);
             if (result.Succeeded)
             {
                 SignInAsync(username, password, true);
