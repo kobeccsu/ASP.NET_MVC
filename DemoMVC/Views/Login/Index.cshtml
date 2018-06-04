@@ -4,7 +4,9 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Login</h2>
+
+<h1>@ViewBag.ResponseMessage</h1>
 
 @if (!User.Identity.IsAuthenticated)
 {
@@ -15,5 +17,9 @@
         <input type="submit" value="Submit" />
     }
 }
+
+<script type="text/javascript" src="jquery.unobstrusive-ajax.js"></script>
+
+@Html.ActionLink("Register", "Register", new AjaxOptions {  UpdateTargetId = "body-content" })
 
 

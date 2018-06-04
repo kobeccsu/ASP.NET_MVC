@@ -1,0 +1,12 @@
+﻿@model DemoMVC.LocalDbContext.Login_User
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+@using (Html.BeginForm("Register", "Login", FormMethod.Post))
+{
+    @Html.TextBoxFor(m => m.Username)
+    @Html.PasswordFor(m => m.Password)
+    <input type="submit" value="Submit" />
+}

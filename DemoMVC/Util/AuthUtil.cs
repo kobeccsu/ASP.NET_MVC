@@ -25,19 +25,25 @@ namespace DemoMVC.Util
             return new CustomUserManage(userStore);
         }
 
-        public static void SignIn(string username, string password, bool isPersistent)
+        public static bool SignIn(string username, string password, bool isPersistent)
         {
             var manager = GetManager();
             var user = manager.Find(username, password);
 
-            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-            var identity = manager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            authenticationManager.SignIn(new AuthenticationProperties()
-               {
-                   IsPersistent = isPersistent
-               }, identity);
+            if (user != null)
+            {
+                var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+                authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+
+                var identity = manager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                authenticationManager.SignIn(new AuthenticationProperties()
+                {
+                    IsPersistent = isPersistent
+                }, identity);
+                return true;
+            }
+            return false;
         }
 
         public static void Register(string username, string password)
@@ -55,7 +61,7 @@ namespace DemoMVC.Util
         public static void SignOut()
         {
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            authenticationManager.SignOut();
         }
     }
 }
