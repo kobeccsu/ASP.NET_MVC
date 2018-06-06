@@ -61,7 +61,7 @@ namespace DemoMVC.Util
         public static void SignOut()
         {
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            authenticationManager.SignOut();
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace DemoMVC.Controllers
         public ActionResult Logout()
         {
             AuthUtil.SignOut();
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }
